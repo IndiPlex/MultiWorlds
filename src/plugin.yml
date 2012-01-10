@@ -1,0 +1,10 @@
+name: MultiWorlds
+
+author: IndiPlex Team
+
+main: de.indiplex.multiworlds.MultiWorlds
+version: 0.1
+
+commands:
+  wd:
+    usage: /<command> <tp|create|reload> [world] {nether|normal}

@@ -250,7 +250,7 @@ public class MultiWorlds extends IPMPlugin {
             l++;
         }
         log.info(pre + "Config loaded (" + l + " worlds found)...");
-        getAPI().saveConfig(this, config);
+        getAPI().saveConfig(config);
     }
 
     public void loadWorlds(boolean reload) {
@@ -270,6 +270,6 @@ public class MultiWorlds extends IPMPlugin {
     }
 
     boolean save() {
-        return getAPI().saveConfig(this, config);
+        return getAPI().saveConfig(config);
     }
 }

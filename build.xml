@@ -10,4 +10,7 @@
 <project name="WDFworlds" default="default" basedir=".">
     <description>Builds, tests, and runs the project WDFworlds.</description>
     <import file="nbproject/build-impl.xml"/>
+    <target name="-post-jar">
+        <copy file="${dist.jar}" flatten="true" todir="../release/" />
+    </target>
 </project>

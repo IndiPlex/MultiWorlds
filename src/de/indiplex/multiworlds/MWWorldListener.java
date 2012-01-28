@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.world.PortalCreateEvent;
-import org.bukkit.event.world.WorldListener;
 
 /**
  *
  * @author temp
  */
-public class MWWorldListener extends WorldListener {
+public class MWWorldListener implements Listener {
 
     private MultiWorlds MWorlds;
     private BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
@@ -20,7 +21,7 @@ public class MWWorldListener extends WorldListener {
         this.MWorlds = MWorlds;
     }
 
-    @Override
+    @EventHandler
     public void onPortalCreate(PortalCreateEvent event) {        
         ArrayList<Block> blocks = event.getBlocks();
         Sign sign = null;

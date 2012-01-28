@@ -17,6 +17,7 @@
  */
 package de.indiplex.multiworlds;
 
+import de.indiplex.manager.IPMAPI;
 import de.indiplex.manager.IPMPlugin;
 import de.indiplex.multiworlds.generators.MWGenerator;
 import de.indiplex.multiworlds.generators.MidiGenerator;
@@ -33,8 +34,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -68,7 +68,7 @@ public class MultiWorlds extends IPMPlugin {
     }
 
     @Override
-    public void onLoad() {
+    public void onIPMLoad() {
         MultiWorldsAPI MWAPI = new MultiWorldsAPI(this);
         getAPI().registerAPI(MWAPI);
         mwAPI = MWAPI;
@@ -86,10 +86,11 @@ public class MultiWorlds extends IPMPlugin {
     @Override
     public void onEnable() {
         PluginManager pm = getServer().getPluginManager();
-        MWWorldListener wListener = new MWWorldListener(this);
-        pm.registerEvent(Type.PORTAL_CREATE, wListener, Priority.Normal, this);
+        Listener wListener = new MWWorldListener(this);
+        pm.registerEvents(wListener, this);
         loadConfig();
         loadWorlds(false);
+        
         printEnabled(pre);
     }
 
@@ -286,6 +287,19 @@ public class MultiWorlds extends IPMPlugin {
     }
 
     boolean save() {
+        log.info(pre+"Saved config of "+getAPI().test());
         return getAPI().saveConfig(config);
     }
+    
+    private static IPMAPI API;
+
+    @Override
+    protected void init(IPMAPI API) {
+        MultiWorlds.API = API;
+    }
+
+    public static IPMAPI getAPI() {
+        return API;
+    }
+    
 }

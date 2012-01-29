@@ -35,6 +35,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -88,9 +89,9 @@ public class MultiWorlds extends IPMPlugin {
         PluginManager pm = getServer().getPluginManager();
         Listener wListener = new MWWorldListener(this);
         pm.registerEvents(wListener, this);
-        loadConfig();
+        loadConfig(false);
         loadWorlds(false);
-        
+
         printEnabled(pre);
     }
 
@@ -117,7 +118,7 @@ public class MultiWorlds extends IPMPlugin {
         } else if (args[0].equalsIgnoreCase("reload")) {
             if (args.length == 2) {
                 if (args[1].equalsIgnoreCase("config")) {
-                    loadConfig();
+                    loadConfig(true);
                     player.sendMessage("Config reloaded!");
                     return true;
                 } else if (args[1].equalsIgnoreCase("worlds")) {
@@ -126,7 +127,7 @@ public class MultiWorlds extends IPMPlugin {
                     return true;
                 }
             }
-            loadConfig();
+            loadConfig(true);
             loadWorlds(true);
             player.sendMessage("Config and worlds reloaded!");
             return true;
@@ -182,7 +183,17 @@ public class MultiWorlds extends IPMPlugin {
                 if (args[1].equalsIgnoreCase("mwws")) {
                     for (MWWorld w : worlds) {
                         i++;
-                        player.sendMessage(String.valueOf(i) + ": Name=" + w.getName() + " Generator=" + w.getGenerator().getClass().getSimpleName() + " Environment= " + w.getEnv().name());
+                        if (w==null) {
+                            player.sendMessage("Error, world "+i+" doesn't exists!");
+                        }
+                        String name = w.getName();
+                        ChunkGenerator generator = w.getGenerator();
+                        String genName = "standard";
+                        if (generator!=null) {
+                            genName = generator.getClass().getSimpleName();
+                        }
+                        String envName = w.getEnv().toString();
+                        player.sendMessage(String.valueOf(i) + ": Name=" + name + " Generator=" + genName + " Environment= " + envName);
                     }
                     return true;
                 }
@@ -227,14 +238,17 @@ public class MultiWorlds extends IPMPlugin {
         }
     }
 
-    public void loadConfig() {
-        log.info(pre + "Loading config...");
+    public void loadConfig(boolean reload) {
+        if (!reload) {
+            log.info(pre + "Loading config...");
+        }
         createConfig();
         ConfigurationSection configurationSection = config.getConfigurationSection("worlds");
         Set<String> t = configurationSection.getKeys(false);
         List<String> ws = new ArrayList<String>(t);
 
         worlds.clear();
+
         int l = 0;
         for (int i = 0; i < ws.size(); i++) {
             String world = ws.get(i);
@@ -247,8 +261,10 @@ public class MultiWorlds extends IPMPlugin {
                     genHashMap.put(world, cg);
                 }
             } catch (InstantiationException ex) {
+                ex.printStackTrace();
                 cg = null;
             } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
                 cg = null;
             }
 
@@ -266,12 +282,15 @@ public class MultiWorlds extends IPMPlugin {
             worlds.add(mww);
             l++;
         }
-        log.info(pre + "Config loaded (" + l + " worlds found)...");
-        getAPI().saveConfig(config);
+        if (!reload) {
+            log.info(pre + "Config loaded (" + l + " worlds found)...");
+        }
     }
 
     public void loadWorlds(boolean reload) {
-        log.info(pre + "Loading worlds...");
+        if (!reload) {
+            log.info(pre + "Loading worlds...");
+        }
         int i = 0;
         for (MWWorld w : worlds) {
             if (!w.createWorld()) {
@@ -283,14 +302,14 @@ public class MultiWorlds extends IPMPlugin {
                 i++;
             }
         }
-        log.info(pre + i + " worlds loaded...");
+        if (!reload) {
+            log.info(pre + i + " worlds loaded...");
+        }
     }
 
     boolean save() {
-        log.info(pre+"Saved config of "+getAPI().test());
         return getAPI().saveConfig(config);
     }
-    
     private static IPMAPI API;
 
     @Override
@@ -301,5 +320,4 @@ public class MultiWorlds extends IPMPlugin {
     public static IPMAPI getAPI() {
         return API;
     }
-    
 }

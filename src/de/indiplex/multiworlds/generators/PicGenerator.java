@@ -29,11 +29,8 @@ public class PicGenerator extends MWGenerator {
     public HashMap<String, Integer[][]> datas = new HashMap<String, Integer[][]>();
     private ArrayList<String> initedWorlds = new ArrayList<String>();
     public HashMap<Integer, Integer> wools = new HashMap<Integer, Integer>();
-    private MultiWorldsAPI api;
 
-    public PicGenerator(MultiWorldsAPI api) {
-        this.api = api;
-        
+    public PicGenerator() {
         wools.put(0xFFe4e4e4, 0x0);
         wools.put(0xFFa0a7a7, 0x8);
         wools.put(0xFF414141, 0x7);
@@ -124,11 +121,11 @@ public class PicGenerator extends MWGenerator {
     
     private void init(String wn) {
         Integer[][] data;        
-        File pic = new File(api.getDataFolder(), api.getStringParam(wn, "picFile", "pic.png"));
+        File pic = new File(API.getDataFolder(), API.getStringParam(wn, "picFile", "pic.png"));
         URL picURL = null;
-        if (api.getStringParam(wn, "picURL", null)!=null) {
+        if (API.getStringParam(wn, "picURL", null)!=null) {
             try {
-                picURL = new URI(api.getStringParam(wn, "picURL", null)).toURL();
+                picURL = new URI(API.getStringParam(wn, "picURL", null)).toURL();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -140,7 +137,7 @@ public class PicGenerator extends MWGenerator {
             } else {
                 image = ImageIO.read(picURL);
             }
-            if ((image.getWidth() > 300 || image.getHeight() > 300) && api.getBooleanParam(wn, "scale", true)) {
+            if ((image.getWidth() > 300 || image.getHeight() > 300) && API.getBooleanParam(wn, "scale", true)) {
                 image = scaleImage(image, pic);
             }
 

@@ -28,6 +28,9 @@ public abstract class MWGenerator extends ChunkGenerator {
     
     protected MultiWorldsAPI API;
 
+    public MWGenerator() {
+    }
+
     public void initAPI(MultiWorldsAPI API) {
         this.API = API;
     }     

@@ -1,7 +1,6 @@
 package de.indiplex.multiworlds.generators;
 
 import de.indiplex.multiworlds.MultiWorlds;
-import de.indiplex.multiworlds.MultiWorldsAPI;
 import de.indiplex.multiworlds.generators.util.MWActionGenerator;
 import de.indiplex.multiworlds.generators.util.Point3D;
 import de.indiplex.multiworlds.generators.util.Sphere;
@@ -28,11 +27,9 @@ public class SpherePopulator extends BlockPopulator implements MWActionGenerator
     private static final int MIN_SPHERE_DISTANCE_FROM_GROUND = 4;
     
     private ArrayList<Sphere> spheres;
-    private MultiWorldsAPI api;
 
-    public SpherePopulator(MultiWorldsAPI api) {               
+    public SpherePopulator() {               
         spheres = new ArrayList<Sphere>();
-        this.api = api;
         try {
             load();
         } catch (IOException ex) {

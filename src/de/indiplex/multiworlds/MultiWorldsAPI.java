@@ -92,7 +92,7 @@ public class MultiWorldsAPI implements API {
             }
         }
 
-        MW.loadConfig();
+        MW.loadConfig(true);
         MW.loadWorlds(true);
     }
 

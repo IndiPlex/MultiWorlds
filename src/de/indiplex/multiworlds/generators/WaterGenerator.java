@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
-import org.bukkit.generator.ChunkGenerator;
 
 /**
  *
@@ -17,12 +16,9 @@ import org.bukkit.generator.ChunkGenerator;
  */
 public class WaterGenerator extends MWGenerator implements MWActionGenerator {
     
-    private MultiWorldsAPI api;
     private ArrayList<BlockPopulator> pops = new ArrayList<BlockPopulator>();
 
-    public WaterGenerator(MultiWorldsAPI api) {
-        pops.add(new SpherePopulator(api));
-        this.api = api;
+    public WaterGenerator() {
     }
     
     @Override
@@ -43,7 +39,8 @@ public class WaterGenerator extends MWGenerator implements MWActionGenerator {
     }
 
     @Override
-    public List<BlockPopulator> getDefaultPopulators(World world) {               
+    public List<BlockPopulator> getDefaultPopulators(World world) {    
+        pops.add(new SpherePopulator());
         return pops;
     }
 

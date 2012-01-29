@@ -1,7 +1,6 @@
 package de.indiplex.multiworlds.generators;
 
 import de.indiplex.multiworlds.MultiWorlds;
-import de.indiplex.multiworlds.MultiWorldsAPI;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,12 +23,6 @@ public class MidiGenerator extends MWGenerator {
     private ArrayList<String> initedWorlds = new ArrayList<String>();
     private HashMap<String, Integer> pData = new HashMap<String, Integer>();
     private HashMap<String, Integer[]> vData = new HashMap<String, Integer[]>();
-    private MultiWorldsAPI api;
-
-    public MidiGenerator(MultiWorldsAPI api) {
-        this.api = api;
-        
-    }
 
     @Override
     public byte[] generate(World world, Random random, int cx, int cz) {
@@ -72,7 +65,7 @@ public class MidiGenerator extends MWGenerator {
     }
     
     private void init(String wn) {
-        File midiFile = new File(api.getDataFolder(), api.getStringParam(wn, "midiFile", "midi.mid"));
+        File midiFile = new File(API.getDataFolder(), API.getStringParam(wn, "midiFile", "midi.mid"));
         try {
             Sequence seq = MidiSystem.getSequence(midiFile);
             Track guitar1Track = seq.getTracks()[3];

@@ -45,7 +45,6 @@ import org.bukkit.plugin.PluginManager;
 public class MultiWorlds extends IPMPlugin {
 
     public static final String pre = "[MW] ";
-    public YamlConfiguration config;
     public boolean mustCreateConfig = false;
     public List<MWWorld> worlds = new ArrayList<MWWorld>();
     public HashMap<String, Class<? extends MWGenerator>> generators = new HashMap<String, Class<? extends MWGenerator>>();
@@ -73,7 +72,6 @@ public class MultiWorlds extends IPMPlugin {
         MultiWorldsAPI MWAPI = new MultiWorldsAPI(this);
         getAPI().registerAPI(MWAPI);
         mwAPI = MWAPI;
-        config = getAPI().getConfig();
         registerGenerators(MWAPI);
     }
 
@@ -209,6 +207,7 @@ public class MultiWorlds extends IPMPlugin {
     }
 
     private void createConfig() {
+        YamlConfiguration config = getAPI().getConfig();
         ConfigurationSection cs = config.getConfigurationSection("worlds");
         ArrayList<String> wos = new ArrayList<String>();
         if (cs != null) {
@@ -236,9 +235,11 @@ public class MultiWorlds extends IPMPlugin {
             }
             mustCreateConfig = false;
         }
+        getAPI().saveConfig(config);
     }
 
     public void loadConfig(boolean reload) {
+        YamlConfiguration config = getAPI().getConfig();
         if (!reload) {
             log.info(pre + "Loading config...");
         }
@@ -307,9 +308,6 @@ public class MultiWorlds extends IPMPlugin {
         }
     }
 
-    boolean save() {
-        return getAPI().saveConfig(config);
-    }
     private static IPMAPI API;
 
     @Override

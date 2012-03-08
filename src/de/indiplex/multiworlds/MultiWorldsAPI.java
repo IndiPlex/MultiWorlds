@@ -39,7 +39,7 @@ public class MultiWorldsAPI implements API {
     }
 
     public boolean hasWorld(String world) {
-        return MW.config.get("worlds." + world) != null;
+        return MultiWorlds.getAPI().getConfig().get("worlds." + world) != null;
     }
 
     public boolean isEnv(String env) {
@@ -47,15 +47,15 @@ public class MultiWorldsAPI implements API {
     }
     
     public int getIntParam(String world, String param, int standard) {
-        return MW.config.getInt("worlds."+world+".params."+param, standard);
+        return MultiWorlds.getAPI().getConfig().getInt("worlds."+world+".params."+param, standard);
     }
     
     public boolean getBooleanParam(String world, String param, boolean standard) {
-        return MW.config.getBoolean("worlds."+world+".params."+param, standard);
+        return MultiWorlds.getAPI().getConfig().getBoolean("worlds."+world+".params."+param, standard);
     }
     
     public String getStringParam(String world, String param, String standard) {
-        return MW.config.getString("worlds."+world+".params."+param, standard);
+        return MultiWorlds.getAPI().getConfig().getString("worlds."+world+".params."+param, standard);
     }
     
     public File getDataFolder() {
@@ -63,11 +63,11 @@ public class MultiWorldsAPI implements API {
     }
 
     public String worldHasEnv(String world) {
-        return MW.config.getString("worlds." + world + ".environment");
+        return MultiWorlds.getAPI().getConfig().getString("worlds." + world + ".environment");
     }
 
     public boolean worldHasEnv(String world, String env) {
-        return MW.config.getString("worlds." + world + ".environment").equalsIgnoreCase(env);
+        return MultiWorlds.getAPI().getConfig().getString("worlds." + world + ".environment").equalsIgnoreCase(env);
     }
     
     public MWGenerator getGenByWorld(String world) {
@@ -75,12 +75,12 @@ public class MultiWorldsAPI implements API {
     }
 
     public World registerWorld(String world, String generator, Environment env, boolean asExtern) {
-        YamlConfiguration conf = MW.config;
+        YamlConfiguration conf = MultiWorlds.getAPI().getConfig();
         conf.set("worlds." + world + ".environment", env.toString());
         conf.set("worlds." + world + ".generator", generator);
         conf.set("worlds." + world + ".extern", asExtern);
         MultiWorlds.log.info(MultiWorlds.pre + "Added world \"" + world + "\" with environment \"" + env + "\" and generator \"" + generator + "\"");
-        MW.save();
+        MultiWorlds.getAPI().saveConfig(conf);
         reload(false);
         return MW.getServer().getWorld(world);
     }

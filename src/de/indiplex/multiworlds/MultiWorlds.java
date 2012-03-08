@@ -181,13 +181,13 @@ public class MultiWorlds extends IPMPlugin {
                 if (args[1].equalsIgnoreCase("mwws")) {
                     for (MWWorld w : worlds) {
                         i++;
-                        if (w==null) {
-                            player.sendMessage("Error, world "+i+" doesn't exists!");
+                        if (w == null) {
+                            player.sendMessage("Error, world " + i + " doesn't exists!");
                         }
                         String name = w.getName();
                         ChunkGenerator generator = w.getGenerator();
                         String genName = "standard";
-                        if (generator!=null) {
+                        if (generator != null) {
                             genName = generator.getClass().getSimpleName();
                         }
                         String envName = w.getEnv().toString();
@@ -243,45 +243,49 @@ public class MultiWorlds extends IPMPlugin {
         if (!reload) {
             log.info(pre + "Loading config...");
         }
+        int l = 0;
         createConfig();
         ConfigurationSection configurationSection = config.getConfigurationSection("worlds");
-        Set<String> t = configurationSection.getKeys(false);
-        List<String> ws = new ArrayList<String>(t);
+        if (configurationSection != null) {
 
-        worlds.clear();
 
-        int l = 0;
-        for (int i = 0; i < ws.size(); i++) {
-            String world = ws.get(i);
-            MWGenerator cg = null;
-            try {
-                Class<? extends MWGenerator> get = generators.get(config.getString("worlds." + world + ".generator"));
-                if (get != null) {
-                    cg = get.newInstance();
-                    cg.initAPI(mwAPI);
-                    genHashMap.put(world, cg);
+            Set<String> t = configurationSection.getKeys(false);
+            List<String> ws = new ArrayList<String>(t);
+
+            worlds.clear();
+
+            for (int i = 0; i < ws.size(); i++) {
+                String world = ws.get(i);
+                MWGenerator cg = null;
+                try {
+                    Class<? extends MWGenerator> get = generators.get(config.getString("worlds." + world + ".generator"));
+                    if (get != null) {
+                        cg = get.newInstance();
+                        cg.initAPI(mwAPI);
+                        genHashMap.put(world, cg);
+                    }
+                } catch (InstantiationException ex) {
+                    ex.printStackTrace();
+                    cg = null;
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                    cg = null;
                 }
-            } catch (InstantiationException ex) {
-                ex.printStackTrace();
-                cg = null;
-            } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
-                cg = null;
-            }
 
-            if (cg == null && config.getBoolean("worlds." + world + ".extern", false)) {
-                continue;
-            }
-            World.Environment env = null;
-            try {
-                env = World.Environment.valueOf(config.getString("worlds." + world + ".environment").toUpperCase());
-            } catch (Exception e) {
-                log.warning(pre + "There is no environment for world " + world + " set.");
-            }
-            MWWorld mww = new MWWorld(world, cg, env);
+                if (cg == null && config.getBoolean("worlds." + world + ".extern", false)) {
+                    continue;
+                }
+                World.Environment env = null;
+                try {
+                    env = World.Environment.valueOf(config.getString("worlds." + world + ".environment").toUpperCase());
+                } catch (Exception e) {
+                    log.warning(pre + "There is no environment for world " + world + " set.");
+                }
+                MWWorld mww = new MWWorld(world, cg, env);
 
-            worlds.add(mww);
-            l++;
+                worlds.add(mww);
+                l++;
+            }
         }
         if (!reload) {
             log.info(pre + "Config loaded (" + l + " worlds found)...");
@@ -307,7 +311,6 @@ public class MultiWorlds extends IPMPlugin {
             log.info(pre + i + " worlds loaded...");
         }
     }
-
     private static IPMAPI API;
 
     @Override
